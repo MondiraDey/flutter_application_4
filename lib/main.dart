@@ -5,26 +5,63 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final List<String> items = List.generate(20, (index) => 'Item ${index + 1}');
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ListView Example',
+      title: 'Text Styling Demo',
       home: Scaffold(
         appBar: AppBar(
-          title: Text('List of Items'),
+          title: Text('Styled Texts'),
         ),
-        body: ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(
-                items[index],
-                style: TextStyle(fontSize: 18),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Bold Text',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                  color: Colors.blue,
+                ),
               ),
-            );
-          },
+              SizedBox(height: 10),
+              Text(
+                'Italic Text',
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                  fontSize: 20,
+                  color: Colors.green,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Underlined Text',
+                style: TextStyle(
+                  decoration: TextDecoration.underline,
+                  fontSize: 18,
+                  color: Colors.purple,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Strikethrough Text',
+                style: TextStyle(
+                  decoration: TextDecoration.lineThrough,
+                  fontSize: 18,
+                  color: Colors.red,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Custom Font Size and Color',
+                style: TextStyle(
+                  fontSize: 30,
+                  color: Colors.orange,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
