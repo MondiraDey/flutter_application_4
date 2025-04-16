@@ -1,95 +1,64 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
-void main() {
-  runApp(DateTimePickerApp());
-}
+void main() => runApp(AnimatedBoxApp());
 
-class DateTimePickerApp extends StatelessWidget {
+class AnimatedBoxApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Date & Time Picker',
-      theme: ThemeData(primarySwatch: Colors.deepPurple),
-      home: DateTimePickerScreen(),
+      home: AnimatedBoxScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class DateTimePickerScreen extends StatefulWidget {
+class AnimatedBoxScreen extends StatefulWidget {
   @override
-  _DateTimePickerScreenState createState() => _DateTimePickerScreenState();
+  _AnimatedBoxScreenState createState() => _AnimatedBoxScreenState();
 }
 
-class _DateTimePickerScreenState extends State<DateTimePickerScreen> {
-  DateTime? selectedDate;
-  TimeOfDay? selectedTime;
+class _AnimatedBoxScreenState extends State<AnimatedBoxScreen> {
+  double _width = 100;
+  double _height = 100;
+  Color _color = Colors.blue;
+  BorderRadiusGeometry _borderRadius = BorderRadius.circular(10);
 
-  Future<void> _pickDate() async {
-    DateTime now = DateTime.now();
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: now,
-      firstDate: DateTime(now.year - 5),
-      lastDate: DateTime(now.year + 5),
-    );
-    if (picked != null) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
-  }
-
-  Future<void> _pickTime() async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-    if (picked != null) {
-      setState(() {
-        selectedTime = picked;
-      });
-    }
-  }
-
-  String get formattedDate {
-    if (selectedDate == null) return "No date selected";
-    return "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}";
-  }
-
-  String get formattedTime {
-    if (selectedTime == null) return "No time selected";
-    return selectedTime!.format(context);
+  void _changeContainer() {
+    final random = Random();
+    setState(() {
+      _width = random.nextDouble() * 200 + 50;
+      _height = random.nextDouble() * 200 + 50;
+      _color = Color.fromRGBO(
+        random.nextInt(256),
+        random.nextInt(256),
+        random.nextInt(256),
+        1,
+      );
+      _borderRadius = BorderRadius.circular(random.nextDouble() * 100);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Pick Date & Time')),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton.icon(
-              icon: Icon(Icons.calendar_today),
-              label: Text("Pick Date"),
-              onPressed: _pickDate,
-            ),
-            SizedBox(height: 10),
-            Text("Selected Date: $formattedDate"),
-            SizedBox(height: 30),
-            ElevatedButton.icon(
-              icon: Icon(Icons.access_time),
-              label: Text("Pick Time"),
-              onPressed: _pickTime,
-            ),
-            SizedBox(height: 10),
-            Text("Selected Time: $formattedTime"),
-          ],
+      appBar: AppBar(title: Text('Animated Container')),
+      body: Center(
+        child: AnimatedContainer(
+          width: _width,
+          height: _height,
+          decoration: BoxDecoration(
+            color: _color,
+            borderRadius: _borderRadius,
+          ),
+          duration: Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _changeContainer,
+        child: Icon(Icons.play_arrow),
       ),
     );
   }
 }
-
