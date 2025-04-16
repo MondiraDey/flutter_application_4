@@ -1,63 +1,57 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
 
-void main() => runApp(AnimatedBoxApp());
+void main() {
+  runApp(MySettingsApp());
+}
 
-class AnimatedBoxApp extends StatelessWidget {
+class MySettingsApp extends StatefulWidget {
+  @override
+  _MySettingsAppState createState() => _MySettingsAppState();
+}
+
+class _MySettingsAppState extends State<MySettingsApp> {
+  bool _isDarkMode = false;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: AnimatedBoxScreen(),
+      theme: _isDarkMode ? ThemeData.dark() : ThemeData.light(),
+      home: SettingsScreen(
+        isDarkMode: _isDarkMode,
+        onToggleDarkMode: (bool value) {
+          setState(() {
+            _isDarkMode = value;
+          });
+        },
+      ),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class AnimatedBoxScreen extends StatefulWidget {
-  @override
-  _AnimatedBoxScreenState createState() => _AnimatedBoxScreenState();
-}
+class SettingsScreen extends StatelessWidget {
+  final bool isDarkMode;
+  final ValueChanged<bool> onToggleDarkMode;
 
-class _AnimatedBoxScreenState extends State<AnimatedBoxScreen> {
-  double _width = 100;
-  double _height = 100;
-  Color _color = Colors.blue;
-  BorderRadiusGeometry _borderRadius = BorderRadius.circular(10);
-
-  void _changeContainer() {
-    final random = Random();
-    setState(() {
-      _width = random.nextDouble() * 200 + 50;
-      _height = random.nextDouble() * 200 + 50;
-      _color = Color.fromRGBO(
-        random.nextInt(256),
-        random.nextInt(256),
-        random.nextInt(256),
-        1,
-      );
-      _borderRadius = BorderRadius.circular(random.nextDouble() * 100);
-    });
-  }
+  const SettingsScreen({
+    required this.isDarkMode,
+    required this.onToggleDarkMode,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Animated Container')),
-      body: Center(
-        child: AnimatedContainer(
-          width: _width,
-          height: _height,
-          decoration: BoxDecoration(
-            color: _color,
-            borderRadius: _borderRadius,
+      appBar: AppBar(title: Text('Settings')),
+      body: ListView(
+        children: [
+          SwitchListTile(
+            title: Text('Dark Mode'),
+            subtitle: Text('Enable or disable dark theme'),
+            value: isDarkMode,
+            onChanged: onToggleDarkMode,
+            secondary: Icon(Icons.dark_mode),
           ),
-          duration: Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _changeContainer,
-        child: Icon(Icons.play_arrow),
+        ],
       ),
     );
   }
