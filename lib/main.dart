@@ -8,60 +8,53 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Text Styling Demo',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Styled Texts'),
+      title: 'Two Screen Navigation',
+      home: FirstScreen(),
+    );
+  }
+}
+
+class FirstScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('First Screen'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          child: Text('Go to Second Screen'),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SecondScreen()),
+            );
+          },
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Bold Text',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                  color: Colors.blue,
-                ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Italic Text',
-                style: TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontSize: 20,
-                  color: Colors.green,
-                ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Underlined Text',
-                style: TextStyle(
-                  decoration: TextDecoration.underline,
-                  fontSize: 18,
-                  color: Colors.purple,
-                ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Strikethrough Text',
-                style: TextStyle(
-                  decoration: TextDecoration.lineThrough,
-                  fontSize: 18,
-                  color: Colors.red,
-                ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Custom Font Size and Color',
-                style: TextStyle(
-                  fontSize: 30,
-                  color: Colors.orange,
-                ),
-              ),
-            ],
-          ),
+      ),
+    );
+  }
+}
+
+class SecondScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Second Screen'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // Go back to the first screen
+          },
+        ),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          child: Text('Back to First Screen'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
     );
