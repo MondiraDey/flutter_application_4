@@ -8,36 +8,58 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Styled Container',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Styled Container Example'),
+      title: 'Custom AppBar Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: HomePage(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blueAccent,
+        elevation: 4,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Image.asset(
+              'assets/logo.png',
+              height: 30,
+            ),
+            SizedBox(width: 10),
+            Text(
+              'My Cool App',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
-        body: Center(
-          child: Container(
-            padding: EdgeInsets.all(20),
-            margin: EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.blueAccent, // background color
-              borderRadius: BorderRadius.circular(20), // rounded corners
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 10,
-                  offset: Offset(4, 4),
-                ),
-              ],
-            ),
-            child: Text(
-              'Hello, Stylish Container!',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-              textAlign: TextAlign.center,
-            ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              // Add search functionality here
+              print("Search tapped");
+            },
           ),
+          IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              // Add menu functionality here
+              print("Menu tapped");
+            },
+          ),
+        ],
+      ),
+      body: Center(
+        child: Text(
+          'Welcome to the App!',
+          style: TextStyle(fontSize: 20),
         ),
       ),
     );
