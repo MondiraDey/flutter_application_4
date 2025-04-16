@@ -1,133 +1,141 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
-// Sample data model
-class Item {
-  final String imageUrl;
-  final String title;
-  final String subtitle;
-  final String description;
-
-  Item({
-    required this.imageUrl,
-    required this.title,
-    required this.subtitle,
-    required this.description,
-  });
-}
-
-// Main App
 class MyApp extends StatelessWidget {
-  final List<Item> items = List.generate(
-    5,
-    (index) => Item(
-      imageUrl: 'https://via.placeholder.com/150?text=Image+${index + 1}',
-      title: 'Title ${index + 1}',
-      subtitle: 'Subtitle ${index + 1}',
-      description: 'This is a detailed description of item ${index + 1}.',
-    ),
-  );
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Custom Card List',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Animated Cards'),
-        ),
-        body: ListView.builder(
-          padding: EdgeInsets.all(12),
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            return AnimatedCard(item: items[index]);
-          },
+      title: 'Bottom Navigation Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: BottomNavScreen(),
+    );
+  }
+}
+
+class BottomNavScreen extends StatefulWidget {
+  @override
+  _BottomNavScreenState createState() => _BottomNavScreenState();
+}
+
+class _BottomNavScreenState extends State<BottomNavScreen> {
+  int _currentIndex = 0;
+
+  final List<Widget> _screens = [
+    HomeTab(),
+    SearchTab(),
+    ProfileTab(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _screens,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        onTap: (index) => setState(() => _currentIndex = index),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+//
+// ----- Individual Tabs -----
+//
+
+class HomeTab extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Home')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Welcome Home!',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            SizedBox(height: 20),
+            Image.network(
+              'https://via.placeholder.com/150',
+              height: 150,
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-// Custom animated card widget
-class AnimatedCard extends StatefulWidget {
-  final Item item;
-
-  const AnimatedCard({Key? key, required this.item}) : super(key: key);
-
-  @override
-  State<AnimatedCard> createState() => _AnimatedCardState();
-}
-
-class _AnimatedCardState extends State<AnimatedCard>
-    with SingleTickerProviderStateMixin {
-  double _scale = 1.0;
-
-  void _onTapDown(TapDownDetails details) {
-    setState(() => _scale = 0.97);
-  }
-
-  void _onTapUp(TapUpDetails details) {
-    setState(() => _scale = 1.0);
-  }
-
-  void _onTapCancel() {
-    setState(() => _scale = 1.0);
-  }
+class SearchTab extends StatelessWidget {
+  final List<String> dummyResults = List.generate(5, (i) => 'Result ${i + 1}');
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // You can do something on tap
-      },
-      onTapDown: _onTapDown,
-      onTapUp: _onTapUp,
-      onTapCancel: _onTapCancel,
-      child: AnimatedScale(
-        scale: _scale,
-        duration: Duration(milliseconds: 150),
-        curve: Curves.easeInOut,
-        child: Card(
-          margin: EdgeInsets.symmetric(vertical: 8),
-          elevation: 4,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    widget.item.imageUrl,
-                    width: 100,
-                    height: 100,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(widget.item.title,
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 4),
-                      Text(widget.item.subtitle,
-                          style: TextStyle(
-                              fontSize: 14, color: Colors.grey[700])),
-                      SizedBox(height: 8),
-                      Text(widget.item.description,
-                          style: TextStyle(fontSize: 13)),
-                    ],
-                  ),
-                )
-              ],
+    return Scaffold(
+      appBar: AppBar(title: Text('Search')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Search...',
+                border: OutlineInputBorder(),
+              ),
             ),
-          ),
+            SizedBox(height: 20),
+            ...dummyResults.map((res) => ListTile(
+                  leading: Icon(Icons.search),
+                  title: Text(res),
+                )),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ProfileTab extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Profile')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 50,
+              backgroundImage:
+                  NetworkImage('https://via.placeholder.com/100'),
+            ),
+            SizedBox(height: 20),
+            Text('John Doe',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            SizedBox(height: 8),
+            Text('Flutter Developer'),
+          ],
         ),
       ),
     );
